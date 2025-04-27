@@ -1,42 +1,36 @@
+const tokenListContainer = document.createElement('div');
+document.body.appendChild(tokenListContainer);
 
-async function fetchTokenData() {
-    const tokenAddress = "0x1234567890abcdef"; // Ganti dengan address token SOL-mu
+async function fetchNewTokens() {
+  try {
+    const response = await fetch('https://api.solscan.io/token/list?sort_by=createdAt&limit=10', {
+      headers: {
+        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3NDU3NzIyMjE1NzAsImVtYWlsIjoidW1hbnlhYW1pQGdtYWlsLmNvbSIsImFjdGlvbiI6InRva2VuLWFwaSIsImFwaVZlcnNpb24iOiJ2MiIsImlhdCI6MTc0NTc3MjIyMX0.rBuN697yMv_kNHd5EdRkuAUzuR0rBtRar7vubrvmXk4'
+      }
+    });
 
-    const twitterUrl = `https://api.twitter.com/2/users/by/username/tokenrafli?user.fields=public_metrics`;
-    const solscanUrl = `https://pro-api.solscan.io/v1.0/token/meta?tokenAddress=${tokenAddress}`;
+    const data = await response.json();
 
-    try {
-        const [twitterRes, solscanRes] = await Promise.all([
-            fetch(twitterUrl, {
-                headers: {
-                    "Authorization": `Bearer ${config.twitterBearerToken}`
-                }
-            }),
-            fetch(solscanUrl, {
-                headers: {
-                    "accept": "application/json",
-                    "token": config.solscanApiKey
-                }
-            })
-        ]);
+    if (data?.data?.length > 0) {
+      tokenListContainer.innerHTML = ''; // Bersihkan list sebelumnya
 
-        const twitterData = await twitterRes.json();
-        const solscanData = await solscanRes.json();
-
-        document.getElementById('lastUpdate').innerText = `Terakhir update: ${new Date().toLocaleString()}`;
-
-        document.getElementById('tokenData').innerHTML = `
-            <h2>Token Rafli</h2>
-            <p>Address: ${tokenAddress}</p>
-            <p>Follower: ${twitterData.data.public_metrics.followers_count}</p>
-            <p>Liquidity: ${solscanData.data.liquidity || 'N/A'}</p>
-            <p>Website: <a href="https://tokenrafli.com" target="_blank">tokenrafli.com</a></p>
-        `;
-    } catch (error) {
-        console.error('Error fetching data:', error);
+      data.data.forEach(token => {
+        const tokenElement = document.createElement('div');
+        tokenElement.textContent = `Name: ${token.name || 'Unknown'}, Symbol: ${token.symbol || 'Unknown'}, Address: ${token.address}`;
+        tokenElement.style.margin = '10px 0';
+        tokenListContainer.appendChild(tokenElement);
+      });
+    } else {
+      tokenListContainer.innerHTML = 'Belum ada token baru.';
     }
+  } catch (error) {
+    console.error('Error fetch token:', error);
+    tokenListContainer.innerHTML = 'Gagal mengambil data.';
+  }
 }
 
-// Auto refresh setiap 10 detik
-fetchTokenData();
-setInterval(fetchTokenData, 10000);
+// Pertama kali fetch
+fetchNewTokens();
+
+// Auto refresh tiap 10 detik
+setInterval(fetchNewTokens, 10000);

@@ -1,0 +1,5 @@
+
+const config = {
+    twitterBearerToken: 'AAAAAAAAAAAAAAAAAAAAAO%2BV0wEAAAAALb71jtpaPjsTFeWMnZB9EQ0X0Gw%3Dnka5QO92iRPFnBpw9IboJKRi2Kwhku1EENXo32QMQrXpparqvt',
+    solscanApiKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE3NDU3NzIyMjE1NzAsImVtYWlsIjoidW1hbnlhYW1pQGdtYWlsLmNvbSIsImFjdGlvbiI6InRva2VuLWFwaSIsImFwaVZlcnNpb24iOiJ2MiIsImlhdCI6MTc0NTc3MjIyMX0.rBuN697yMv_kNHd5EdRkuAUzuR0rBtRar7vubrvmXk4'
+};
